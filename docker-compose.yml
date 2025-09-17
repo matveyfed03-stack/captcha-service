@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  captcha:
+    build: .
+    environment:
+      - MIN_PORT=38000
+      - MAX_PORT=38100
+      - MAX_SHUTDOWN_INTERVAL=600
+      - METRICS_ADDR=:9090
+    ports:
+      - "38000-38100:38000-38100"
+      - "9090:9090"
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    volumes:
+      - ./ops/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9091:9090"
+    depends_on:
+      - captcha
+
+
