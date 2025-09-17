@@ -14,8 +14,8 @@ import (
 	"syscall"
 	"time"
 
-	captcha "github.com/your-org/captcha-service/pb/captcha/v1"
-	balancer "github.com/your-org/captcha-service/pb/balancer/v1"
+	balancer "github.com/matveyfed03-stack/captcha-service/pb/balancer/v1"
+	captcha "github.com/matveyfed03-stack/captcha-service/pb/captcha/v1"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -161,12 +161,12 @@ func runBalancerRegistration(ctx context.Context, addr, instanceID, challengeTyp
 			case <-ticker.C:
 				now := time.Now().UnixNano()
 				req := &balancer.RegisterInstanceRequest{
-					EventType:    balancer.RegisterInstanceRequest_READY,
-					InstanceId:   instanceID,
+					EventType:     balancer.RegisterInstanceRequest_READY,
+					InstanceId:    instanceID,
 					ChallengeType: challengeType,
-					Host:         host,
-					PortNumber:   int32(port),
-					Timestamp:    now,
+					Host:          host,
+					PortNumber:    int32(port),
+					Timestamp:     now,
 				}
 				if err := stream.Send(req); err != nil {
 					log.Printf("heartbeat send error: %v", err)
@@ -190,6 +190,3 @@ func runBalancerRegistration(ctx context.Context, addr, instanceID, challengeTyp
 		}
 	}()
 }
-
-
-
