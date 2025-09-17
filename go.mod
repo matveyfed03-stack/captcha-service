@@ -1,4 +1,4 @@
-module github.com/your-org/captcha-service
+module github.com/matveyfed03-stack/captcha-service
 
 go 1.22.2
 

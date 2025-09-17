@@ -14,8 +14,8 @@ import (
 	"syscall"
 	"time"
 
-	balancer "github.com/matveyfed03-stack/captcha-service/pb/balancer/v1"
-	captcha "github.com/matveyfed03-stack/captcha-service/pb/captcha/v1"
+	balancer "github.com/matveyfed03-stack/captcha-service/pkg/pb/proto/balancer/v1"
+	captcha "github.com/matveyfed03-stack/captcha-service/pkg/pb/proto/captcha/v1"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"

@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package balancer.v1;
-option go_package = "github.com/your-org/captcha-service/pb/balancer/v1";
+option go_package = "github.com/matveyfed03-stack/captcha-service/pb/balancer/v1";
 
 service BalancerService {
   rpc RegisterInstance(stream RegisterInstanceRequest) returns (stream RegisterInstanceResponse) {}
