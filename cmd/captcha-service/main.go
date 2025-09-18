@@ -9,7 +9,7 @@ import (
 	"log"
 	"net"
 	"net/http"
-	_ "net/http/pprof"
+	_"net/http/pprof"
 	"net/netip"
 	"os"
 	"os/signal"

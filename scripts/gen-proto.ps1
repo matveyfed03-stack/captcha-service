@@ -11,10 +11,10 @@ $ErrorActionPreference = 'Stop'
 
 protoc `
   -I proto `
-  --go_out=paths=source_relative:./pb `
-  --go-grpc_out=paths=source_relative:./pb `
-  proto/balancer/v1/balancer.proto `
-  proto/captcha/v1/captcha.proto
+  --go_out=paths=source_relative:./pkg/proto `
+  --go-grpc_out=paths=source_relative:./pkg/proto `
+  proto/balancer/balancer.proto `
+  proto/captcha/captcha.proto
 
 Write-Host "Protobufs generated."
 

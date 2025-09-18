@@ -36,3 +36,5 @@ func BenchmarkNewChallenge(b *testing.B) {
 		}
 	}
 }
+
+

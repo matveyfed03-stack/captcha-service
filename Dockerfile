@@ -12,3 +12,5 @@ EXPOSE 38000-40000 9090
 ENTRYPOINT ["/captcha-service"]
 
 
+
+
