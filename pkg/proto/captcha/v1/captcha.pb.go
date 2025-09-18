@@ -7,11 +7,12 @@
 package v1
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -167,9 +168,9 @@ func (x *ChallengeResponse) GetHtml() string {
 }
 
 type ClientEvent struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	EventType     ClientEvent_EventType  `protobuf:"varint,1,opt,name=event_type,json=eventType,proto3,enum=captcha.v1.ClientEvent_EventType" json:"event_type,omitempty"`
-	ChallengeId   string                 `protobuf:"bytes,2,opt,name=challenge_id,json=challengeId,proto3" json:"challenge_id,omitempty"`
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	EventType   ClientEvent_EventType  `protobuf:"varint,1,opt,name=event_type,json=eventType,proto3,enum=captcha.v1.ClientEvent_EventType" json:"event_type,omitempty"`
+	ChallengeId string                 `protobuf:"bytes,2,opt,name=challenge_id,json=challengeId,proto3" json:"challenge_id,omitempty"`
 	Data          []byte                 `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

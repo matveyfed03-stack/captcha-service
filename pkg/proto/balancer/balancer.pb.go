@@ -4,14 +4,15 @@
 // 	protoc        v6.32.1
 // source: proto/balancer/v1/balancer.proto
 
-package v1
+package balancer
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -120,9 +121,9 @@ func (RegisterInstanceResponse_Status) EnumDescriptor() ([]byte, []int) {
 }
 
 type RegisterInstanceRequest struct {
-	state         protoimpl.MessageState            `protogen:"open.v1"`
-	EventType     RegisterInstanceRequest_EventType `protobuf:"varint,1,opt,name=event_type,json=eventType,proto3,enum=balancer.v1.RegisterInstanceRequest_EventType" json:"event_type,omitempty"`
-	InstanceId    string                            `protobuf:"bytes,2,opt,name=instance_id,json=instanceId,proto3" json:"instance_id,omitempty"`
+	state      protoimpl.MessageState            `protogen:"open.v1"`
+	EventType  RegisterInstanceRequest_EventType `protobuf:"varint,1,opt,name=event_type,json=eventType,proto3,enum=balancer.v1.RegisterInstanceRequest_EventType" json:"event_type,omitempty"`
+	InstanceId string                            `protobuf:"bytes,2,opt,name=instance_id,json=instanceId,proto3" json:"instance_id,omitempty"`
 	ChallengeType string                            `protobuf:"bytes,3,opt,name=challenge_type,json=challengeType,proto3" json:"challenge_type,omitempty"`
 	Host          string                            `protobuf:"bytes,4,opt,name=host,proto3" json:"host,omitempty"`
 	PortNumber    int32                             `protobuf:"varint,5,opt,name=port_number,json=portNumber,proto3" json:"port_number,omitempty"`
@@ -204,9 +205,9 @@ func (x *RegisterInstanceRequest) GetTimestamp() int64 {
 }
 
 type RegisterInstanceResponse struct {
-	state         protoimpl.MessageState          `protogen:"open.v1"`
-	Status        RegisterInstanceResponse_Status `protobuf:"varint,1,opt,name=status,proto3,enum=balancer.v1.RegisterInstanceResponse_Status" json:"status,omitempty"`
-	Message       string                          `protobuf:"bytes,3,opt,name=message,proto3" json:"message,omitempty"`
+	state   protoimpl.MessageState          `protogen:"open.v1"`
+	Status  RegisterInstanceResponse_Status `protobuf:"varint,1,opt,name=status,proto3,enum=balancer.v1.RegisterInstanceResponse_Status" json:"status,omitempty"`
+	Message string                          `protobuf:"bytes,3,opt,name=message,proto3" json:"message,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

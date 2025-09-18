@@ -18,8 +18,8 @@ import (
 	"time"
 
 	"github.com/matveyfed03-stack/captcha-service/internal/store"
-	balancer "github.com/matveyfed03-stack/captcha-service/pb/balancer/v1"
-	captcha "github.com/matveyfed03-stack/captcha-service/pb/captcha/v1"
+	"github.com/matveyfed03-stack/captcha-service/pkg/proto/balancer"
+	"github.com/matveyfed03-stack/captcha-service/pkg/proto/captcha/v1"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -95,11 +95,11 @@ func generateInstanceID() string {
 }
 
 type captchaServer struct {
-	captcha.UnimplementedCaptchaServiceServer
+	v1.UnimplementedCaptchaServiceServer
 	store *store.InMemoryStore
 }
 
-func (s *captchaServer) NewChallenge(ctx context.Context, req *captcha.ChallengeRequest) (*captcha.ChallengeResponse, error) {
+func (s *captchaServer) NewChallenge(ctx context.Context, req *v1.ChallengeRequest) (*v1.ChallengeResponse, error) {
 	start := time.Now()
 	challengeID := generateInstanceID()
 	// store expected answer
@@ -109,19 +109,19 @@ func (s *captchaServer) NewChallenge(ctx context.Context, req *captcha.Challenge
 
 	// Minimal HTML with postMessage integration
 	html := "<!doctype html><html><head><meta charset=\"utf-8\"><title>Captcha</title><style>body{font-family:sans-serif}button{font-size:20px;padding:8px 16px}</style></head><body><h3>Click the button</h3><button id=\"btn\">I am human</button><script>\nconst btn=document.getElementById('btn');\nbtn.addEventListener('click',()=>{\n  window.top.postMessage({type:'captcha:sendData',data:new TextEncoder().encode('clicked').buffer},'*');\n});\nwindow.addEventListener('message',e=>{if(e.data?.type==='captcha:serverData'){/* handle server data */}});\n</script></body></html>"
-	resp := &captcha.ChallengeResponse{ChallengeId: challengeID, Html: html}
+	resp := &v1.ChallengeResponse{ChallengeId: challengeID, Html: html}
 	metricNewChallengeLatency.Observe(float64(time.Since(start).Milliseconds()))
 	return resp, nil
 }
 
-func (s *captchaServer) MakeEventStream(stream captcha.CaptchaService_MakeEventStreamServer) error {
+func (s *captchaServer) MakeEventStream(stream v1.CaptchaService_MakeEventStreamServer) error {
 	for {
 		ev, err := stream.Recv()
 		if err != nil {
 			return err
 		}
 		switch ev.EventType {
-		case captcha.ClientEvent_FRONTEND_EVENT:
+		case v1.ClientEvent_FRONTEND_EVENT:
 			metricValidateTotal.Inc()
 			valid := s.store.ValidateAndDelete(ev.ChallengeId, ev.Data)
 			if valid {
@@ -132,8 +132,8 @@ func (s *captchaServer) MakeEventStream(stream captcha.CaptchaService_MakeEventS
 			if valid {
 				confidence = 100
 			}
-			_ = stream.Send(&captcha.ServerEvent{Event: &captcha.ServerEvent_Result{Result: &captcha.ServerEvent_ChallengeResult{ChallengeId: ev.ChallengeId, ConfidencePercent: confidence}}})
-		case captcha.ClientEvent_CONNECTION_CLOSED:
+			_ = stream.Send(&v1.ServerEvent{Event: &v1.ServerEvent_Result{Result: &v1.ServerEvent_ChallengeResult{ChallengeId: ev.ChallengeId, ConfidencePercent: confidence}}})
+		case v1.ClientEvent_CONNECTION_CLOSED:
 			// ignore
 		default:
 			// ignore unknown
@@ -167,7 +167,7 @@ func main() {
 	grpcServer := grpc.NewServer()
 	capStore := store.NewInMemoryStore(5 * time.Minute)
 	defer capStore.Close()
-	captcha.RegisterCaptchaServiceServer(grpcServer, &captchaServer{store: capStore})
+	v1.RegisterCaptchaServiceServer(grpcServer, &captchaServer{store: capStore})
 
 	go func() {
 		log.Printf("CaptchaService listening on :%d", port)
