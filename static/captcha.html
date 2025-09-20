@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Captcha Challenge</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f0f0f0; }
+        .container { padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-align: center; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h3>Please verify you are human</h3>
+    <button id="verify-btn">I am not a robot</button>
+</div>
+<script>
+    const verifyBtn = document.getElementById('verify-btn');
+    const resultDiv = document.getElementById('result');
+
+    verifyBtn.addEventListener('click', () => {
+        console.log('Button clicked. Sending solution...');
+        // Отправляем "решение" родительскому окну.
+        // В ТЗ указано, что данные должны быть компактными, в идеале бинарными.
+        // Пока для простоты отправим строку "success".
+        // На следующих этапах мы будем это кодировать.
+        window.top.postMessage({ type: 'captcha:sendData', data: 'success' }, '*');
+        resultDiv.textContent = 'Processing...';
+    });
+
+    // Слушаем сообщения ОТ сервера (проксируемые через родительское окно)
+    window.addEventListener("message", (e) => {
+        if (e.data?.type === "captcha:serverData") {
+            console.log("Received data from server:", e.data.data);
+            // Для простоты будем считать, что сервер присылает "OK" или "FAIL"
+            if (e.data.data === "OK") {
+                resultDiv.textContent = 'Success!';
+                resultDiv.className = 'success';
+                verifyBtn.disabled = true;
+            } else {
+                resultDiv.textContent = 'Failed. Please try again.';
+                resultDiv.className = 'error';
+            }
+        }
+    });
+
+    console.log("Captcha frame loaded and ready.");
+    console.log("Captcha frame loaded.");
+</script>
+</body>
+</html>

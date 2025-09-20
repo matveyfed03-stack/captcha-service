@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package captcha.v1;
+option go_package = "./pb/captcha/v1";
+
+service CaptchaService {
+  rpc NewChallenge(ChallengeRequest) returns (ChallengeResponse) {}
+  rpc MakeEventStream(stream ClientEvent) returns (stream ServerEvent) {}
+}
+
+message ChallengeRequest {
+  int32 complexity = 1;
+}
+
+message ChallengeResponse {
+  string challenge_id = 1;
+  string html = 2;
+}
+
+message ClientEvent {
+  enum EventType {
+    FRONTEND_EVENT = 0;
+    CONNECTION_CLOSED = 1;
+    BALANCER_EVENT = 2;
+  }
+
+  EventType event_type = 1;
+  string challenge_id = 2;
+  bytes data = 3;
+}
+
+message ServerEvent {
+  message ChallengeResult {
+    string challenge_id = 1;
+    int32 confidence_percent = 2;
+  }
+
+  message RunClientJS {
+    string challenge_id = 1;
+    string js_code = 2;
+  }
+
+  message SendClientData {
+    string challenge_id = 1;
+    bytes data = 2;
+  }
+
+  oneof event {
+    ChallengeResult result = 1;
+    RunClientJS client_js = 2;
+    SendClientData client_data = 3;
+  }
+}

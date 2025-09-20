@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package balancer.v1;
+option go_package = "./pb/balancer/v1";
+
+import "google/protobuf/timestamp.proto";
+
+service BalancerService {
+  rpc RegisterInstance(stream RegisterInstanceRequest) returns (stream RegisterInstanceResponse) {}
+}
+
+message RegisterInstanceRequest {
+  enum EventType {
+    UNKNOWN = 0;
+    READY = 1;
+    NOT_READY = 2;
+    STOPPED = 3;
+  }
+
+  EventType event_type = 1;
+  string instance_id = 2;
+  string challenge_type = 3;
+  string host = 4;
+  int32 port_number = 5;
+  int64 timestamp = 6;
+}
+
+message RegisterInstanceResponse {
+  enum Status {
+    SUCCESS = 0;
+    ERROR = 1;
+  }
+
+  Status status = 1;
+  string message = 3;
+}
